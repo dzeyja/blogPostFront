@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export default function LoginPage() {
@@ -8,6 +8,7 @@ export default function LoginPage() {
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
 
+    const navigate = useNavigate()
 
     const handleLogin = async (e) => {
         e.preventDefault()
@@ -17,14 +18,17 @@ export default function LoginPage() {
                 username,
                 password
             })
+
             console.log(response.data)
-            // optionally save token or redirect
+            
+            localStorage.setItem('authToken', response.data.token)
 
             setUsername('')
             setPassword('')
             setMessage('Сен успешно кірдің')
+            setError('')
+            navigate('/profile')
         } catch (e) {
-            console.log(e.message)
             setError('Сенде ошибка емае')
         }
     }
@@ -37,7 +41,7 @@ export default function LoginPage() {
                     <div className="mb-4 text-center text-green-600 font-medium">{message}</div>
                 )}
                 {error && (
-                    <div className="mb-4 text-center text-red-600 font-medium">{message}</div>
+                    <div className="mb-4 text-center text-red-600 font-medium">{error}</div>
                 )}
                 <form onSubmit={handleLogin} className="flex flex-col gap-4">
                     <input
