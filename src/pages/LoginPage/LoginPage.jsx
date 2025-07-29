@@ -1,12 +1,15 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../providers/AuthProvider'
 
 export default function LoginPage() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
+
+    const { login } = useAuth()
 
     const navigate = useNavigate()
 
@@ -19,9 +22,11 @@ export default function LoginPage() {
                 password
             })
 
-            console.log(response.data)
-            
             localStorage.setItem('authToken', response.data.token)
+            console.log(response.data)
+
+            login(response.data.token)
+            
 
             setUsername('')
             setPassword('')
